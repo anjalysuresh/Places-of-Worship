@@ -491,7 +491,7 @@
               {% for category in categories %}
               <div class="col-md-3 col-sm-3 gallery-item">
                 <a data-rel="fancybox-button"
-                  title="{{ category.name }}: {{ category.desc }}"
+                  title=""
                   href="{% url 'category_view' category.pk  community.pk %}"
                   class="fancybox-button">
                   <img style="height: 250px; width: 100%; border: 1px solid red;" src="{{ MEDIA_URL }}{{category.image}}" class="img-responsive">
