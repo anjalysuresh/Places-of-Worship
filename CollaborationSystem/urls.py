@@ -178,6 +178,8 @@ urlpatterns = [
     url(r'group_media_create/', group_views.group_media_create, name='group_media_create'),
 
     url(r'category_view/(?P<catid>\d+)/(?P<commid>\d+)/$', categoryview.category_view, name='category_view'),
+    url(r'^create_community_type/$', communityview.create_community_types, name='create_community_type'),
+
 ]
 
 from wiki.urls import get_pattern as get_wiki_pattern
