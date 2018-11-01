@@ -5,7 +5,7 @@ from BasicArticle.views import create_article, view_article, getHTML
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render
 from BasicArticle.models import Articles
-from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityGroups, CommunityCourses, CommunityMedia
+from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityGroups, CommunityCourses, CommunityMedia, CommunityTypes
 from rest_framework import viewsets
 from .models import CommunityGroups
 from Group.views import create_group
@@ -36,6 +36,7 @@ from metadata.views import create_metadata
 from metadata.models import MediaMetadata
 from Category.models import Category
 from Category.views import create_group_category
+from django.contrib import messages
 
 def display_communities(request):
 	if request.method == 'POST':
@@ -701,3 +702,18 @@ def community_media_create(request):
 			return redirect('home')
 	else:
 		return redirect('login')
+
+def create_community_types(request):
+	if request.user.is_superuser:
+		if request.method == 'POST':
+			name = request.POST['name']
+			image = request.FILES['type_image']
+			typeno = request.POST['typeno']
+			CommunityTypes.objects.create(name=name, image=image, typeno=typeno)
+			messages.success(request, name + ' successfully created')
+			return redirect('create_community_type')
+		else:
+			return render(request, 'create_community_types.html')
+	else:
+		return redirect('display_community_types')
+	
