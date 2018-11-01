@@ -1436,19 +1436,19 @@ div.content-form-page .checkbox-list {
 Pre-Footer and pre-footer elements
 ***/
 .pre-footer {
-	background: #313030;
-	color: #b0b0b0;
+	background: #ffddca;
+	color: #e6400c;
 }
 .pre-footer .container {
-	padding-top: 45px;
+	padding-top: 5px;
 }
 .pre-footer a {
-	color: #57c8eb;
+	color: #e6400c;
 }
 .pre-footer h2,
 .ecommerce .pre-footer h2 {
 	font-size: 21px;
-	color: #c2c1c1;
+	color: #e6400c;
 }
 .pre-footer p {
 	margin-bottom: 20px;
