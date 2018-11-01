@@ -32,12 +32,12 @@
                 <div class="col-md-3 col-sm-4 gallery-item">
                     {% if group.group.image %}
                     <a data-rel="fancybox-button" title="" href="{{ MEDIA_URL }}{{ group.group.image}}" class="fancybox-button" text="{{ group.group.name }}">
-                        <img style="height: 250px; width: 250px; border: 1px solid red;" src="{{ MEDIA_URL }}{{ group.group.image}}" class="img-responsive">
+                        <img style="height: 250px; width: 100%; border: 1px solid red;" src="{{ MEDIA_URL }}{{ group.group.image}}" class="img-responsive">
                         <div class="zoomix"><i class="fa fa-search"></i></div>
                     </a>
                     {% else %}
                     <a data-rel="fancybox-button" title="" href="{{ MEDIA_URL }}default/group_image_default.png" class="fancybox-button" text="{{ group.group.name }}">
-                        <img style="height: 250px; width: 250px; border: 1px solid red;" src="{{ MEDIA_URL }}default/group_image_default.png" class="img-responsive">
+                        <img style="height: 250px; width: 100%; border: 1px solid red;" src="{{ MEDIA_URL }}default/group_image_default.png" class="img-responsive">
                         <div class="zoomix"><i class="fa fa-search"></i></div>
                     </a>
                     {% endif %}
