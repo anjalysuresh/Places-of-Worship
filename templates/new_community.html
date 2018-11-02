@@ -40,10 +40,13 @@
     <small id="bodyhelp" class="form-text text-muted">Let people know what this community is about</small>
   </div>
   <div class="form-group">
-    <label for="category">Category</label>
-    <input type="text" class="form-control" id="category" name="category" placeholder="Give a category to your community" required>
-    <div class="invalid-feedback"></div>
-  </div>
+      <label for="Category">Catetgory</label>
+      <select id="category" name="category" class="btn btn-primary">
+        {% for ctype in ctypes %}
+          <option value="{{ ctype.pk }}">{{ ctype.name }}</option>
+        {% endfor %}
+      </select>
+    </div>  
   <div class="form-group">
     <label for="username">Username</label>
     <input type="text" class="form-control" id="username" name="username" placeholder="Enter username of the user who will be the community admin" required>

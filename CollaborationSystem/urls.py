@@ -179,6 +179,7 @@ urlpatterns = [
 
     url(r'category_view/(?P<catid>\d+)/(?P<commid>\d+)/$', categoryview.category_view, name='category_view'),
     url(r'^create_community_type/$', communityview.create_community_types, name='create_community_type'),
+    url(r'^display_community_types/$', communityview.display_community_types, name='display_community_types'),
 
 ]
 
