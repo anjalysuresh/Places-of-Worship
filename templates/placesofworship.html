@@ -2,7 +2,7 @@
 
 {% block breadcrumb %}
   <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
-  <li class="breadcrumb-item active"><a href="{% url 'display_communities' %}">Communities</li>
+  <li class="breadcrumb-item active"><a href="{% url 'display_community_types' %}">Places Of Worship</a></li>
   {% if user.is_authenticated %}
   <li class="breadcrumb-item active">{{ message }}</li>
   {% endif %}
@@ -22,11 +22,8 @@
                 <form id="display_community" method="post" action="{% url 'display_communities' %}">
                     {% csrf_token %}
                     <input type="hidden" name="ctype" value="{{ctype.pk}}">
-                <a data-rel="fancybox-button"
-                  title="type"
-                  href="#"
-                  onclick="document.getElementById('display_community').submit()"
-                  class="fancybox-button">
+                <a href="#"
+                  onclick="document.getElementById('display_community').submit()">
                   <img style="height: 250px; width: 250px; border: 1px solid red;" src="{{ MEDIA_URL }}{{ctype.image}}" class="img-responsive">
                 </a>
             
