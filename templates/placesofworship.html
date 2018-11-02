@@ -19,15 +19,15 @@
             <div class="row margin-bottom-10">
               {% for ctype in ctypes %}
               <div class="col-md-3 col-sm-3 gallery-item">
-                <form id="display_community" method="post" action="{% url 'display_communities' %}">
+                <form id="display_community{{ctype.pk}}" method="post" action="{% url 'display_communities' %}">
                     {% csrf_token %}
                     <input type="hidden" name="ctype" value="{{ctype.pk}}">
                 <a href="#"
-                  onclick="document.getElementById('display_community').submit()">
+                  onclick="document.getElementById('display_community{{ctype.pk}}').submit()">
                   <img style="height: 250px; width: 250px; border: 1px solid red;" src="{{ MEDIA_URL }}{{ctype.image}}" class="img-responsive">
                 </a>
             
-                <h3> <a href="#" onclick="document.getElementById('display_community').submit()">{{ctype.name}}</a> </h3>
+                <h3> <a href="#" onclick="document.getElementById('display_community{{ctype.pk}}').submit()">{{ctype.name}}</a> </h3>
             </form>
               </div>
               {% endfor %}
