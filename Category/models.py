@@ -1,6 +1,6 @@
 from django.db import models
 from Group.models import Group
-from Community.models import Community
+from Community.models import Community, CommunityTypes
 import os, uuid
 
 def get_file_path(instance, filename):
@@ -12,6 +12,7 @@ class Category(models.Model):
 	name = models.CharField(max_length=100)
 	desc = models.TextField()
 	image = models.ImageField(null=True, upload_to=get_file_path)
+	commtype = models.ForeignKey(CommunityTypes, null=True, related_name='categorytype')	
 
 	def __str__(self):
 		return self.name
