@@ -40,15 +40,20 @@ from django.contrib import messages
 
 def display_communities(request):
 	if request.method == 'POST':
-		sortby = request.POST['sortby']
-		if sortby == 'a_to_z':
-			communities=Community.objects.all().order_by('name')
-		if sortby == 'z_to_a':
-			communities=Community.objects.all().order_by('-name')
-		if sortby == 'oldest':
-			communities=Community.objects.all().order_by('created_at')
-		if sortby == 'latest':
-			communities=Community.objects.all().order_by('-created_at')
+		if 'sortby' in request.POST:
+			sortby = request.POST['sortby']
+			if sortby == 'a_to_z':
+				communities=Community.objects.all().order_by('name')
+			if sortby == 'z_to_a':
+				communities=Community.objects.all().order_by('-name')
+			if sortby == 'oldest':
+				communities=Community.objects.all().order_by('created_at')
+			if sortby == 'latest':
+				communities=Community.objects.all().order_by('-created_at')
+		elif 'ctype' in request.POST:
+			category = request.POST['ctype']
+			category = CommunityTypes.objects.get(pk=category)
+			communities=Community.objects.filter(category=category)
 	else:
 		communities=Community.objects.all().order_by('name')
 	return render(request, 'communities.html',{'communities':communities})
@@ -409,6 +414,7 @@ def create_community(request):
 				name = request.POST['name']
 				desc = request.POST['desc']
 				category = request.POST['category']
+				category = CommunityTypes.objects.get(pk=category)
 				tag_line = request.POST['tag_line']
 				role = Roles.objects.get(name='community_admin')
 				try:
@@ -435,8 +441,9 @@ def create_community(request):
 					forum_link = slug + '-' + str(cursor.fetchone()[0])
 				except:
 					errormessage = 'Can not create default forum for this community'
-					return render(request, 'new_community.html', {'errormessage':errormessage})
-
+					ctypes = CommunityTypes.objects.all()
+					return render(request, 'new_community.html', {'errormessage':errormessage, 'ctypes':ctypes})
+	
 				community = Community.objects.create(
 					name=name,
 					desc=desc,
@@ -462,9 +469,11 @@ def create_community(request):
 				return redirect('community_view', community.pk)
 			except User.DoesNotExist:
 				errormessage = 'user does not exist'
-				return render(request, 'new_community.html', {'errormessage':errormessage})
+				ctypes = CommunityTypes.objects.all()
+				return render(request, 'new_community.html', {'errormessage':errormessage, 'ctypes':ctypes})
 		else:
-			return render(request, 'new_community.html')
+			ctypes = CommunityTypes.objects.all()
+			return render(request, 'new_community.html', {'ctypes':ctypes})
 	else:
 		return redirect('home')
 
@@ -717,3 +726,6 @@ def create_community_types(request):
 	else:
 		return redirect('display_community_types')
 	
+def display_community_types(request):
+	ctypes=CommunityTypes.objects.all()
+	return render(request, 'placesofworship.html', {'ctypes':ctypes} )
