@@ -5,7 +5,7 @@ from BasicArticle.views import create_article, view_article, getHTML
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render
 from BasicArticle.models import Articles
-from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityGroups, CommunityCourses, CommunityMedia
+from .models import Community, CommunityMembership, CommunityArticles, RequestCommunityCreation, CommunityGroups, CommunityCourses, CommunityMedia, CommunityTypes
 from rest_framework import viewsets
 from .models import CommunityGroups
 from Group.views import create_group
@@ -36,18 +36,24 @@ from metadata.views import create_metadata
 from metadata.models import MediaMetadata
 from Category.models import Category
 from Category.views import create_group_category
+from django.contrib import messages
 
 def display_communities(request):
 	if request.method == 'POST':
-		sortby = request.POST['sortby']
-		if sortby == 'a_to_z':
-			communities=Community.objects.all().order_by('name')
-		if sortby == 'z_to_a':
-			communities=Community.objects.all().order_by('-name')
-		if sortby == 'oldest':
-			communities=Community.objects.all().order_by('created_at')
-		if sortby == 'latest':
-			communities=Community.objects.all().order_by('-created_at')
+		if 'sortby' in request.POST:
+			sortby = request.POST['sortby']
+			if sortby == 'a_to_z':
+				communities=Community.objects.all().order_by('name')
+			if sortby == 'z_to_a':
+				communities=Community.objects.all().order_by('-name')
+			if sortby == 'oldest':
+				communities=Community.objects.all().order_by('created_at')
+			if sortby == 'latest':
+				communities=Community.objects.all().order_by('-created_at')
+		elif 'ctype' in request.POST:
+			category = request.POST['ctype']
+			category = CommunityTypes.objects.get(pk=category)
+			communities=Community.objects.filter(category=category)
 	else:
 		communities=Community.objects.all().order_by('name')
 	return render(request, 'communities.html',{'communities':communities})
@@ -408,6 +414,7 @@ def create_community(request):
 				name = request.POST['name']
 				desc = request.POST['desc']
 				category = request.POST['category']
+				category = CommunityTypes.objects.get(pk=category)
 				tag_line = request.POST['tag_line']
 				role = Roles.objects.get(name='community_admin')
 				try:
@@ -434,8 +441,9 @@ def create_community(request):
 					forum_link = slug + '-' + str(cursor.fetchone()[0])
 				except:
 					errormessage = 'Can not create default forum for this community'
-					return render(request, 'new_community.html', {'errormessage':errormessage})
-
+					ctypes = CommunityTypes.objects.all()
+					return render(request, 'new_community.html', {'errormessage':errormessage, 'ctypes':ctypes})
+	
 				community = Community.objects.create(
 					name=name,
 					desc=desc,
@@ -461,9 +469,11 @@ def create_community(request):
 				return redirect('community_view', community.pk)
 			except User.DoesNotExist:
 				errormessage = 'user does not exist'
-				return render(request, 'new_community.html', {'errormessage':errormessage})
+				ctypes = CommunityTypes.objects.all()
+				return render(request, 'new_community.html', {'errormessage':errormessage, 'ctypes':ctypes})
 		else:
-			return render(request, 'new_community.html')
+			ctypes = CommunityTypes.objects.all()
+			return render(request, 'new_community.html', {'ctypes':ctypes})
 	else:
 		return redirect('home')
 
@@ -701,3 +711,21 @@ def community_media_create(request):
 			return redirect('home')
 	else:
 		return redirect('login')
+
+def create_community_types(request):
+	if request.user.is_superuser:
+		if request.method == 'POST':
+			name = request.POST['name']
+			image = request.FILES['type_image']
+			typeno = request.POST['typeno']
+			CommunityTypes.objects.create(name=name, image=image, typeno=typeno)
+			messages.success(request, name + ' successfully created')
+			return redirect('create_community_type')
+		else:
+			return render(request, 'create_community_types.html')
+	else:
+		return redirect('display_community_types')
+	
+def display_community_types(request):
+	ctypes=CommunityTypes.objects.all()
+	return render(request, 'placesofworship.html', {'ctypes':ctypes} )

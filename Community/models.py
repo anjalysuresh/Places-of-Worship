@@ -12,12 +12,21 @@ def get_file_path(instance, filename):
     filename = "%s.%s" % (uuid.uuid4(), ext)
     return os.path.join('community', filename)
 
+class CommunityTypes(models.Model):
+	name = models.CharField(max_length=100)
+	image = models.ImageField(null=True, upload_to=get_file_path)
+	typeno = models.PositiveIntegerField(null=True)
+
+	def __str__(self):
+		return self.name
+
+
 class Community(models.Model):
 
         name = models.CharField(max_length=100)
         desc = models.TextField()
         image = models.ImageField(null=True, upload_to=get_file_path)
-        category = models.CharField(max_length=100)
+        category = models.ForeignKey(CommunityTypes, null=True, related_name='communitytypes')
         tag_line = models.CharField(null=True, max_length=500)
         created_at = models.DateTimeField(null=True, auto_now_add=True)
         created_by = models.ForeignKey(User,null =True, related_name='communitycreator')
@@ -67,4 +76,4 @@ class CommunityCourses(models.Model):
 class CommunityMedia(models.Model):
 	media = models.ForeignKey(Media, null=True, related_name='communitymedia')
 	user = models.ForeignKey(User, null=True, related_name='communitymedia')
-	community = models.ForeignKey(Community, null=True, related_name='communitymedia')	
+	community = models.ForeignKey(Community, null=True, related_name='communitymedia')
