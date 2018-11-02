@@ -26,7 +26,6 @@
 <div class = "main">
 <div class="infinite-container">
     {{myhtml|safe}}{% autoescape off%}
-    <div class="row">
         {% for group in groups %}
             <div class="infinite-item">
                 <div class="col-md-3 col-sm-4 gallery-item">
@@ -45,7 +44,6 @@
                 </div>
             </div>
         {% endfor %}
-    </div>
     {% endautoescape%}
 </div>
 </div>
