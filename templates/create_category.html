@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% load widget_tweaks %}
+
+{% load static %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
+  <li class="breadcrumb-item">Create category</li>
+{% endblock %}
+
+{% block content %}
+{% if messages %}
+<div class="alert alert-success" role="alert">
+<ul class="messages">
+    {% for message in messages %}
+    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+</div>
+{% endif %}
+{% if user.is_authenticated %}
+<form method="post" name = "form" action="{% url 'create_category' %}" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input type="text" class="form-control" id="name" name="name" ng-model="name" ng-pattern="/^[a-z A-Z ()]*$/" placeholder="Give a name to your category"  required>
+    <div class="invalid-feedback">
+      <span class="label" style="color:red" ng-show = "form.name.$error.pattern" >Only alphabets are allowed</span>
+    <span style="color:red" ng-show="form.name.$dirty && form.name.$invalid">Please provide a name for this category</span>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="desc">Description</label>
+    <textarea class="form-control" name="desc" rows="6"></textarea>
+    <small id="bodyhelp" class="form-text text-muted">Provide description for category</small>
+  </div>
+
+  <div class="form-group">
+    <label for="commtype">Type</label>
+    <select id="commtype" name="commtype" class="btn btn-primary">
+      {% for type in commtype %}
+        <option value="{{type.pk}}">{{ type.name }}</option>
+      {% endfor %}
+    </select>
+  </div>    
+
+  <div class="form-group custom-file">
+    <label class="custom-file">
+      Category Image
+      <input type="file" class="custom-file-input" id="image" name ="image" >
+      <span class="custom-file-control"></span>
+    </label>
+  </div>
+  <button id="create" type="submit" class="btn btn-primary" ng-disabled="form.$invalid">Create</button>
+</form>
+<br />
+{% endif %}
+{% endblock %}
+{% block javascript %}
+<script src="{% static 'js/angular.min.js' %}"></script>
+{% endblock %}
