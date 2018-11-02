@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Community, CommunityMembership, CommunityArticles, CommunityGroups, RequestCommunityCreation, CommunityCourses, CommunityMedia
+from .models import Community, CommunityMembership, CommunityArticles, CommunityGroups, RequestCommunityCreation, CommunityCourses, CommunityMedia, CommunityTypes
 from reversion_compare.admin import CompareVersionAdmin
 from reversion_compare.mixins import CompareMixin
 from django.db.models import Manager
@@ -11,6 +11,7 @@ admin.site.register( CommunityGroups)
 admin.site.register( RequestCommunityCreation)
 admin.site.register(CommunityCourses)
 admin.site.register(CommunityMedia)
+admin.site.register(CommunityTypes)
 
 _old_compare = CompareMixin.compare
 
