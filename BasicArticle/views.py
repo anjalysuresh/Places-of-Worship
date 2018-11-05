@@ -143,7 +143,7 @@ def edit_article(request, pk):
 			if 'state' in request.POST and request.POST['state'] == 'save':
 				article = Articles.objects.get(pk=pk)
 				article.title = request.POST['title']
-				article.body = getHTML(article)
+				article.body = request.POST['body']
 				try:
 					article.image = request.FILES['article_image']
 					article.save(update_fields=["title","body","image"])
@@ -153,71 +153,67 @@ def edit_article(request, pk):
 				notify_edit_article(request.user,article, current_state)
 				return redirect('article_view',pk=article.pk)
 			else:
-				if get_pad_usercount(pk) <= 1:
-					article = Articles.objects.get(pk=pk)
-					title = request.POST['title']
-					body = getHTML(article)
-					current_state = request.POST['current']
-					try:
-						current_state = States.objects.get(name=current_state)
-						if 'private' in request.POST:
-							to_state = States.objects.get(name='private')
+				article = Articles.objects.get(pk=pk)
+				title = request.POST['title']
+				body = request.POST['body']
+				current_state = request.POST['current']
+				try:
+					current_state = States.objects.get(name=current_state)
+					if 'private' in request.POST:
+						to_state = States.objects.get(name='private')
+						article.state = to_state
+						#Article got rejected
+						notify_update_article_state(request.user, article, 'rejected')
+						create_resource_feed(article, "article_edit", request.user)
+
+					else:
+						to_state = request.POST['state']
+						to_state = States.objects.get(name=to_state)
+
+						if current_state.name == 'draft' and to_state.name == 'visible' and 'belongs_to' in request.POST:
 							article.state = to_state
-							#Article got rejected
-							notify_update_article_state(request.user, article, 'rejected')
-							create_resource_feed(article, "article_edit", request.user)
+							create_resource_feed(article,'article_edit',request.user)
+
+						elif current_state.name == 'visible' and to_state.name == 'publish' and 'belongs_to' in request.POST:
+							article.state = to_state
 
 						else:
-							to_state = request.POST['state']
-							to_state = States.objects.get(name=to_state)
+							transitions = Transitions.objects.get(from_state=current_state, to_state=to_state)
+							article.state = to_state
 
-							if current_state.name == 'draft' and to_state.name == 'visible' and 'belongs_to' in request.POST:
-								article.state = to_state
-								create_resource_feed(article,'article_edit',request.user)
+							if(to_state.name=='publishable'):
+								notify_update_article_state(request.user,article,'publishable')
+								create_resource_feed(article,"article_no_edit",request.user)
 
-							elif current_state.name == 'visible' and to_state.name == 'publish' and 'belongs_to' in request.POST:
-								article.state = to_state
+							# sending group feed and personal notificaions when an article goes from draft to private state.
+							if(to_state.name=='private'):
+								create_resource_feed(article, "article_edit",request.user)
+								notify_update_article_state(request.user, article, 'private')
 
-							else:
-								transitions = Transitions.objects.get(from_state=current_state, to_state=to_state)
-								article.state = to_state
-
-								if(to_state.name=='publishable'):
-									notify_update_article_state(request.user,article,'publishable')
-									create_resource_feed(article,"article_no_edit",request.user)
-
-								# sending group feed and personal notificaions when an article goes from draft to private state.
-								if(to_state.name=='private'):
-									create_resource_feed(article, "article_edit",request.user)
-									notify_update_article_state(request.user, article, 'private')
-
-								# sending group feed and personal notification to all publishers and admins of group.
-								if(current_state.name == 'private' and to_state.name=='visible'):
-									create_resource_feed(article,"article_no_edit",request.user)
-									notify_update_article_state(request.user, article, 'visible')
+							# sending group feed and personal notification to all publishers and admins of group.
+							if(current_state.name == 'private' and to_state.name=='visible'):
+								create_resource_feed(article,"article_no_edit",request.user)
+								notify_update_article_state(request.user, article, 'visible')
 
 
-						article.title = title
-						article.body = body
-						try:
-							article.image = request.FILES['article_image']
-							article.save(update_fields=["title","body", "image", "state"])
-						except:
-							article.save(update_fields=["title","body", "state"])
-					except Transitions.DoesNotExist:
-						message = "transition doesn' exist"
-					except States.DoesNotExist:
-						message = "state doesn' exist"
-					if to_state.name == 'publish':
-						article.published_on = datetime.datetime.now()
-						article.published_by=request.user
-						article.save()
-						create_resource_feed(article,'article_published',article.created_by)
-						notify_update_article_state(request.user, article,'published')
-					return redirect('article_view',pk=pk)
-				else:
-					messages.success(request, 'The article state cannot be change at this moment because currently there are more than one user editing this article. You can save your changes.')
-					return redirect('article_edit', pk=pk)
+					article.title = title
+					article.body = body
+					try:
+						article.image = request.FILES['article_image']
+						article.save(update_fields=["title","body", "image", "state"])
+					except:
+						article.save(update_fields=["title","body", "state"])
+				except Transitions.DoesNotExist:
+					message = "transition doesn' exist"
+				except States.DoesNotExist:
+					message = "state doesn' exist"
+				if to_state.name == 'publish':
+					article.published_on = datetime.datetime.now()
+					article.published_by=request.user
+					article.save()
+					create_resource_feed(article,'article_published',article.created_by)
+					notify_update_article_state(request.user, article,'published')
+				return redirect('article_view',pk=pk)
 		else:
 			message=""
 			transition =""
@@ -240,7 +236,6 @@ def edit_article(request, pk):
 
 				try:
 					cmember = CommunityMembership.objects.get(user =request.user.id, community = article.community.pk)
-					sessionid = create_session_community(request, article.community.id)
 					try:
 						if article.article.state.name=='publishable':
 							transitions = Transitions.objects.filter(from_state=article.article.state)
@@ -281,7 +276,6 @@ def edit_article(request, pk):
 						cmember = CommunityMembership.objects.get(user=request.user.id, community = communitygroup.community.pk)
 						try:
 							gmember =GroupMembership.objects.get(user=request.user.id, group = article.group.pk)
-							sessionid = create_session_group(request, article.group.id)
 						except GroupMembership.DoesNotExist:
 							gmember = 'FALSE'
 						try:
@@ -302,9 +296,7 @@ def edit_article(request, pk):
 					# print ("Hello6")
 
 					raise Http404
-			padid = get_pad_id(article.article.id)
-			response = render(request, 'edit_article.html', {'article': article, 'cmember':cmember,'gmember':gmember,'message':message, 'belongs_to':belongs_to,'transition': transition,'reject':reject, 'private':private,'url':settings.SERVERURL, 'padid':padid})
-			response.set_cookie('sessionID', sessionid)
+			response = render(request, 'edit_article.html', {'article': article, 'cmember':cmember,'gmember':gmember,'message':message, 'belongs_to':belongs_to,'transition': transition,'reject':reject, 'private':private,'url':settings.SERVERURL})
 			return response
 	else:
 		return redirect('login')
