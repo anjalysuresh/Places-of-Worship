@@ -239,7 +239,7 @@ def handle_community_creation_requests(request):
 					)
 
 				#create the ether id for community
-				create_community_ether(communitycreation)
+				#create_community_ether(communitycreation)
 
 				create_wiki_for_community(communitycreation)
 				communityadmin = Roles.objects.get(name='community_admin')
@@ -422,7 +422,7 @@ def create_community(request):
 				notify_remove_or_add_user(request.user, usr,community,'community_created')
 
 				#create the ether id for community
-				create_community_ether(community)
+				#create_community_ether(community)
 
 				create_wiki_for_community(community)
 

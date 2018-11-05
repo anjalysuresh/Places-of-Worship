@@ -46,7 +46,7 @@ def create_group(request):
 		GroupMembership.objects.create(user=user, group=group, role=role)
 
 		#create ether id for the group 
-		create_group_ether(group)
+		#create_group_ether(group)
 		
 		notify_remove_or_add_user(request.user, user, group, 'group_created')
 		remove_or_add_user_feed(request.user, group, "group_created")
