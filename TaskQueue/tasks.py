@@ -21,7 +21,7 @@ def createbulkcommunity(taskid):
 	data = json.load(f)
 	f.close()
 	communityadmin = Roles.objects.get(name='community_admin')
-	epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
+	#epclient = EtherpadLiteClient(settings.APIKEY, settings.APIURL)
 	for i in data:
 		name = i['name']
 		desc = i['desc']
@@ -61,8 +61,8 @@ def createbulkcommunity(taskid):
 					community = community,
 					role = communityadmin
 					)
-		result =  epclient.createGroupIfNotExistsFor(community.id)
-		EtherCommunity.objects.create(community=community, community_ether_id=result['groupID'])
+		#result =  epclient.createGroupIfNotExistsFor(community.id)
+		#EtherCommunity.objects.create(community=community, community_ether_id=result['groupID'])
 	task.status = True
 	task.save()
 	return "Task completed with success!"
