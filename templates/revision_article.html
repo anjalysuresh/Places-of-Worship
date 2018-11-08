@@ -2,6 +2,7 @@
 {% extends 'base.html' %}
 
 {% block breadcrumb %}
+<li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
   <li class="breadcrumb-item active"><a href="{% url 'display_articles' %}">Articles</a></li>
   <li class="breadcrumb-item active">{{ article.title }}</li>
 {% endblock %}
@@ -19,7 +20,7 @@
           <a class="nav-link " href="{% url 'article_edit' article.pk %}">Edit</a>
         </li>
         {%endif%}
-  
+
   <li class="nav-item active">
     <a class="nav-link active " href="{% url 'article_revision' article.pk %}">Revisions</a>
   </li>

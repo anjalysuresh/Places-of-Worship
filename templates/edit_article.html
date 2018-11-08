@@ -4,6 +4,7 @@
 <link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
 {% endblock %}
 {% block breadcrumb %}
+  <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
   <li class="breadcrumb-item active"><a href="{% url 'display_articles' %}">Articles</a></li>
   <li class="breadcrumb-item active">{{ article.article.title }}</li>
 {% endblock %}
@@ -30,7 +31,7 @@
           </li>
           {% endif %}
     {%endif%}
-  
+
   <li class="nav-item ">
     <a class="nav-link " href="{% url 'article_revision' article.article.pk %}">Revisions</a>
   </li>
@@ -165,7 +166,7 @@
                   <div class="form-group custom-file">
                     <label for="image">Article Image</label>
                     <input type="file"   name ="article_image" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]' data-show-upload="false" data-show-preview="false" data-msg-placeholder="Select article image for upload...">
-                  </div>    
+                  </div>
                 <input type="hidden" class="form-control"  name="current" value='{{article.article.state}}' >
                 <button type="submit" class="btn btn-outline-info"  name="state" value='save' id = "savechanges">Save changes</button>
                 <button type="submit"  class="btn btn-outline-info"  name="state" value='{{transition.to_state.name}}' id = "publish">             {{transition.to_state.name}}</button>
@@ -192,7 +193,7 @@
                   <div class="form-group custom-file">
                     <label for="image">Article Image</label>
                     <input type="file"   name ="article_image" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]' data-show-upload="false" data-show-preview="false" data-msg-placeholder="Select article image for upload...">
-                  </div>  
+                  </div>
                   <input type="hidden" class="form-control"  name="current" value='{{article.article.state}}' >
                 <button type="submit" class="btn btn-outline-info"  name="state" value='save' id = "savechanges">Save changes</button>
 
