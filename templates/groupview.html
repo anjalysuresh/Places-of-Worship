@@ -1,4 +1,8 @@
 {% extends 'base.html' %}
+{%load static %}
+{% block css %}
+  <link href="{% static 'jquery-pagination/pagination.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
 
 {% block breadcrumb %}
   <form id="display_community" method="post" action="{% url 'display_communities' %}">
@@ -486,13 +490,10 @@
         <div class="col-md-4 col-sm-4 blog-sidebar">
           <!-- groups START -->
           <h2 class="">Other Groups</h2>
-          <ul class="nav sidebar-categories margin-bottom-40">
-            {% for grp in othergroups %}
-              {% if grp.group.name != group.name %}
-                <li><a href="{% url 'group_view' grp.group.pk %}">{{grp.group.name}}</a></li>
-              {% endif %}
-            {% endfor %}
+          <ul class="nav sidebar-categories margin-bottom-20">
+              <div class="data-container"></div>
           </ul>
+          <div id="pagination-commgroups" class="margin-bottom-20"></div>              
           <!-- groups END -->
         </div>
         <!-- END middle SIDEBAR -->
@@ -540,4 +541,45 @@
         }
     }
     </script>
+
+<script src="{% static 'jquery-pagination/pagination.js' %}"></script>
+<script>
+    $(function () {
+        (function (name) {
+            var container = $('#pagination-commgroups');
+
+            var sources = function () {
+                var result = [];
+                {% for grp in othergroups %}
+                  {% if grp.group.name != group.name %}
+                    var temp = ''
+                    temp += '<li><a href="{% url 'group_view' grp.group.pk %}">' + '{{grp.group.name}}' + '</a></li>'
+                    result.push(temp);
+                  {% endif %}
+                {% endfor %}
+                return result;
+            }();
+
+            var options = {
+                dataSource: sources,
+                pageSize: 5,
+                showGoInput: true,
+                showGoButton: true,
+                showPageNumbers: false,
+                showNavigator: true,
+
+                callback: function (data, pagination) {
+                    var dataHtml = '';
+                    //Get the datasource (item)
+                    $.each(data, function (index, item) {
+                        dataHtml += item ;
+                    });
+                    //Add data to container
+                    container.prev().html(dataHtml);
+                }
+            };
+            container.pagination(options);
+        })('commgroups-pagination');
+    })
+</script> 
 {% endblock %}
