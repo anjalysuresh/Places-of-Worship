@@ -1,9 +1,16 @@
 {% extends 'base.html' %}
 
 {% block breadcrumb %}
-<li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
-<li class="breadcrumb-item active"><a href="{% url 'community_view' community.community.pk %}"> {{ community.community.name }} </a></li>
-<li class="breadcrumb-item active">{{ group.name }}</li>
+  <form id="display_community" method="post" action="{% url 'display_communities' %}">
+    {% csrf_token %}
+    <input type="hidden" name="ctype" value="{{community.community.category.pk}}">
+  </form>
+  <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
+  <li class="breadcrumb-item active"><a href="{% url 'display_community_types' %}">Places Of Worship</a></li>
+  <li><a href="#" onclick="document.getElementById('display_community').submit()"> {{community.community.category.name}}</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'community_view' community.community.pk %}">{{ community.community.name }}</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'category_view' grpcategory.category.pk  community.community.pk %}">{{grpcategory.category.name}}</a></li>
+  <li class="breadcrumb-item active">{{ group.name }}</li>
 {% endblock %}
 
 {% block content %}

@@ -2,12 +2,21 @@
 
 <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
 <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
-<script src="{% static 'js/infinite.min.js' %}"></script> {% endblock %} {% block breadcrumb %}
+<script src="{% static 'js/infinite.min.js' %}"></script> {% endblock %} 
 
-<li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
-<li class="breadcrumb-item active"><a href="{% url 'community_view' community.pk %}"> {{ community.name }} </a></li>
-<li class="breadcrumb-item active"> {{ category.name }} </li>
-{% endblock %} {% block content %}
+{% block breadcrumb %}
+  <form id="display_community" method="post" action="{% url 'display_communities' %}">
+    {% csrf_token %}
+    <input type="hidden" name="ctype" value="{{community.category.pk}}">
+  </form>
+  <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
+  <li class="breadcrumb-item active"><a href="{% url 'display_community_types' %}">Places Of Worship</a></li>
+  <li><a href="#" onclick="document.getElementById('display_community').submit()"> {{community.category.name}}</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'community_view' community.pk %}">{{ community.name }}</a></li>
+  <li class="breadcrumb-item active"> {{ category.name }} </li>
+{% endblock %}
+
+{% block content %}
 <h1>Groups</h1>
 {% if not groups %}
 <div class="content-page page-404">

@@ -1,10 +1,15 @@
 {% extends 'base.html' %}
 
 {% block breadcrumb %}
+  <form id="display_community" method="post" action="{% url 'display_communities' %}">
+    {% csrf_token %}
+    <input type="hidden" name="ctype" value="{{community.category.pk}}">
+  </form>
   <li class="breadcrumb-item active"><a href="{% url 'home' %}">Home</a></li>
-  <li class="breadcrumb-item"><a href="{% url 'display_communities' %}">Communities</a></li>
+  <li class="breadcrumb-item active"><a href="{% url 'display_community_types' %}">Places Of Worship</a></li>
+  <li><a href="#" onclick="document.getElementById('display_community').submit()"> {{community.category.name}}</a></li>
   <li class="breadcrumb-item active">{{ community.name }}</li>
-{% endblock %}
+  {% endblock %}
 
 {% block content %}
 
