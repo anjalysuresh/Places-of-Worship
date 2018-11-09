@@ -73,7 +73,16 @@
                     <li><i class="fa fa-users"></i> {{subscribers}} Members </li>
                     <li><i class="fa fa-file-text"></i>{{pubarticlescount}} Published articles</li>
                   </ul>
-                  <p>{{ group.desc }}</p>
+
+                  <div id="initial">
+                    {{group.desc|truncatewords:70}}
+                    <a href="#" onclick="descShowHide()" id="morelink"><i class="fa fa-arrow-circle-down" style="color:red;"></i> More</a>
+                  </div>
+                  <div id="final" style="display:none;">
+                      {{group.desc}}
+                    <a href="#" onclick="descShowHide()" id="morelink"> <i class="fa fa-arrow-circle-up" style="color:red;"></i> Less</a>
+                  </div>
+
                 </div>
               </div>
             </div>
@@ -515,4 +524,20 @@
 {% else %}
     <h1><i class="fa fa-lock" style="color: #E84D1C;" ></i>This is a private group</h1>
 {% endif %}
+{% endblock %}
+
+{% block javascript %}
+<script>
+    function descShowHide() {
+        var x = document.getElementById("final");
+        var y = document.getElementById("initial");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+            y.style.display = "none";
+        } else {
+            x.style.display = "none";
+            y.style.display = "block";
+        }
+    }
+    </script>
 {% endblock %}
