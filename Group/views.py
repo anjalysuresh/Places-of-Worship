@@ -81,7 +81,8 @@ def group_view(request, pk):
 	users = GroupArticles.objects.raw('select  u.id,username from auth_user u join Group_grouparticles g on u.id = g.user_id where g.group_id=%s group by u.id order by count(*) desc limit 2;', [pk])
 	contributors = GroupMembership.objects.filter(group = pk)
 	othergroups = CommunityGroups.objects.filter(community = community.community.pk)
-	return render(request, 'groupview.html', {'group': group, 'communitymembership':communitymembership,'membership':membership, 'subscribers':subscribers, 'contributors':contributors, 'users':users, 'community':community,'message':message,'pubarticles':pubarticles,'pubarticlescount':pubarticlescount, 'othergroups':othergroups, 'invitereceived':invitereceived})
+	grpcategory = GroupCategory.objects.get(group=group)
+	return render(request, 'groupview.html', {'group': group, 'communitymembership':communitymembership,'membership':membership, 'subscribers':subscribers, 'contributors':contributors, 'users':users, 'community':community,'message':message,'pubarticles':pubarticles,'pubarticlescount':pubarticlescount, 'othergroups':othergroups, 'invitereceived':invitereceived, 'grpcategory':grpcategory})
 
 def group_subscribe(request):
 	if request.user.is_authenticated:
