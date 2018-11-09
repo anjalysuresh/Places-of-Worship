@@ -36,7 +36,7 @@
   </div>
   <div class="form-group">
     <label for="desc">Description</label>
-    <textarea id="comm_text_box"  class="form-control" name="desc" rows="6"></textarea>
+    <textarea id="comm_text_box"  class="form-control" id="desc" name="desc" rows="6"></textarea>
     <small id="bodyhelp" class="form-text text-muted">Let people know what this community is about</small>
   </div>
   <div class="form-group">
@@ -65,5 +65,22 @@
 {% endif %}
 {% endblock %}
 {% block javascript %}
+<script src="{% static 'js/ckeditor/ckeditor.js'  %}"></script>
+<script>
+  ClassicEditor
+    .create( document.querySelector( '#desc' ) )
+    .then( desc => {
+      console.log( desc );
+    } )
+    .catch( error => {
+      console.error( error );
+    } );
+</script>
+<script src="{% static 'js/jquery-3.2.1.min.js'  %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/purify.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/sortable.min.js' %}"></script>
+<script src="{% static 'js/bootstrap_fileinput/fileinput.min.js' %}">
+</script>
 <script src="{% static 'js/angular.min.js' %}"></script>
 {% endblock %}

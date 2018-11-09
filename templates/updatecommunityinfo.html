@@ -59,7 +59,7 @@
         {% csrf_token %}
         <div class="form-group" >
           <label for="desc">Description</label>
-          <textarea  class="form-control" name="desc" rows="6">{{community.desc}}</textarea>
+          <textarea  class="form-control" name="desc" id="desc" rows="6">{{community.desc}}</textarea>
           <input type="hidden" name="status" value={{status}}>
           <small id="bodyhelp" class="form-text text-muted">Let people know what this community is about</small>
         </div>
@@ -96,7 +96,17 @@
 
 {% endblock %}
 {% block javascript %}
-
+<script src="{% static 'js/ckeditor/ckeditor.js'  %}"></script>
+<script>
+  ClassicEditor
+    .create( document.querySelector( '#desc' ) )
+    .then( desc => {
+      console.log( desc );
+    } )
+    .catch( error => {
+      console.error( error );
+    } );
+</script>
 <script src="{% static 'js/jquery-3.2.1.min.js'  %}"></script>
 <script src="{% static 'js/bootstrap_fileinput/piexif.min.js' %}"></script>
 <script src="{% static 'js/bootstrap_fileinput/purify.min.js' %}"></script>
