@@ -80,7 +80,9 @@
                     <li><i class="fa fa-file-text"></i>{{pubarticlescount}} Published articles</li>
                     <li><i class="fa fa-soccer-ball-o"></i>{{groupcount}} Public groups </li>
                   </ul>
+                  {{myhtml|safe}}{% autoescape off%}
                   <p>{{ community.desc }}</p>
+                  {% endautoescape%}
                 </div>
               </div>
             </div>

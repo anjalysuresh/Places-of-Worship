@@ -344,6 +344,7 @@ def update_community_info(request,pk):
 				if request.method == 'POST':
 					desc = request.POST['desc']
 					category = request.POST['category']
+					category = CommunityTypes.objects.get(pk=category)
 					tag_line = request.POST['tag_line']
 					community.desc = desc
 					community.category = category
@@ -356,7 +357,8 @@ def update_community_info(request,pk):
 					community.save()
 					return redirect('community_view',pk=pk)
 				else:
-					return render(request, 'updatecommunityinfo.html', {'community':community, 'membership':membership})
+					ctypes = CommunityTypes.objects.all()
+					return render(request, 'updatecommunityinfo.html', {'community':community, 'membership':membership, 'ctypes':ctypes})
 			else:
 				return redirect('community_view',pk=pk)
 		except CommunityMembership.DoesNotExist:
