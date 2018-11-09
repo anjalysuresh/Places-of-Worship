@@ -64,10 +64,13 @@
           <small id="bodyhelp" class="form-text text-muted">Let people know what this community is about</small>
         </div>
         <div class="form-group">
-          <label for="category">Category</label>
-          <input type="text" class="form-control" id="category" name="category" value="{{community.category}}" required>
-          <div class="invalid-feedback"></div>
-        </div>
+          <label for="Category">Catetgory</label>
+          <select id="category" name="category" class="btn btn-primary">
+            {% for ctype in ctypes %}
+              <option value="{{ ctype.pk }}">{{ ctype.name }}</option>
+            {% endfor %}
+          </select>
+        </div>  
         <div class="form-group">
           <label for="tag_line">Tag Line</label>
           <input type="text" class="form-control" id="tag_line" name="tag_line" value="{{community.tag_line}}" required>
