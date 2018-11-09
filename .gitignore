@@ -25,3 +25,4 @@ PyEtherpadLite
 src/
 .vscode/
 *.pyc
+media/CACHE
