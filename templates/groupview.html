@@ -78,6 +78,7 @@
                     <li><i class="fa fa-file-text"></i>{{pubarticlescount}} Published articles</li>
                   </ul>
 
+                  {{myhtml|safe}}{% autoescape off%}
                   <div id="initial">
                     {{group.desc|truncatewords:70}}
                     <a href="#" onclick="descShowHide()" id="morelink"><i class="fa fa-arrow-circle-down" style="color:red;"></i> More</a>
@@ -86,6 +87,7 @@
                       {{group.desc}}
                     <a href="#" onclick="descShowHide()" id="morelink"> <i class="fa fa-arrow-circle-up" style="color:red;"></i> Less</a>
                   </div>
+                  {% endautoescape%}
 
                 </div>
               </div>
