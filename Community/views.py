@@ -37,6 +37,7 @@ from metadata.models import MediaMetadata
 from Category.models import Category
 from Category.views import create_group_category
 from django.contrib import messages
+from PIL import Image
 
 def display_communities(request):
 	if request.method == 'POST':
@@ -379,6 +380,10 @@ def create_community(request):
 				category = CommunityTypes.objects.get(pk=category)
 				tag_line = request.POST['tag_line']
 				role = Roles.objects.get(name='community_admin')
+				x = float(request.POST['x'])
+				y = float(request.POST['y'])
+				w = float(request.POST['width'])
+				h = float(request.POST['height'])
 				try:
 					image = request.FILES['community_image']
 				except:
@@ -411,10 +416,18 @@ def create_community(request):
 					desc=desc,
 					category = category,
 					image = image,
+					image_thumbnail = image,
 					tag_line = tag_line,
 					created_by = usr,
 					forum_link = forum_link
 					)
+
+				#for image thumbnail creation 
+				thumb = Image.open(community.image_thumbnail)
+				cropped_image = thumb.crop((x, y, w+x, h+y))
+				resized_image = cropped_image.resize((200, 200), Image.ANTIALIAS)
+				resized_image.save(community.image_thumbnail.path)
+
 				communitymembership = CommunityMembership.objects.create(
 					user = usr,
 					community = community,

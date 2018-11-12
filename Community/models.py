@@ -6,8 +6,6 @@ from Group.models import Group
 from Course.models import Course
 import os, uuid
 from Media.models import Media
-from imagekit.models import ImageSpecField
-from imagekit.processors import ResizeToFill
 
 def get_file_path(instance, filename):
     ext = filename.split('.')[-1]
@@ -28,10 +26,7 @@ class Community(models.Model):
         name = models.CharField(max_length=100)
         desc = models.TextField()
         image = models.ImageField(null=True, upload_to=get_file_path)
-        image_thumbnail = ImageSpecField(source='image',
-                                      processors=[ResizeToFill(400, 400)],
-                                      format='JPEG',
-                                      options={'quality': 60})
+        image_thumbnail = models.ImageField(null=True, upload_to=get_file_path)
         category = models.ForeignKey(CommunityTypes, null=True, related_name='communitytypes')
         tag_line = models.CharField(null=True, max_length=500)
         created_at = models.DateTimeField(null=True, auto_now_add=True)
