@@ -16,7 +16,7 @@ from django.contrib.auth.models import User
 from actstream import action
 from actstream.models import Action
 from actstream.models import target_stream
-from django.contrib.contenttypes.models import ContentType 
+from django.contrib.contenttypes.models import ContentType
 from feeds.views import create_resource_feed
 from notification.views import notify_update_article_state, notify_edit_article
 from py_etherpad import EtherpadLiteClient
@@ -37,7 +37,7 @@ def article_autosave(request,pk):
 			}
 			article.save()
 			return JsonResponse(data)
-	
+
 	else:
 		return redirect('login')
 
@@ -54,7 +54,7 @@ def article_text(request,pk):
 			}
 			# article.save()
 			return JsonResponse(data)
-	
+
 	else:
 		return redirect('login')
 # +++++++++++++++++++++++++++++++++++++++++++
@@ -75,7 +75,11 @@ def display_articles(request):
 	fav_articles = ''
 	if request.user.is_authenticated:
 		fav_articles = favourite.objects.raw('select  ba.id as id , title from BasicArticle_articles as ba ,UserRolesPermission_favourite as uf where ba.id=resource and user_id =%s;', [request.user.id])
-	return render(request, 'articles.html',{'articles':articles, 'favs':fav_articles})
+    #print("hellllllo")
+	list_articles = list(fav_articles)
+	#print(list_articles)
+
+	return render(request, 'articles.html',{'articles':articles, 'favs':list_articles})
 
 def create_article(request):
 	"""
@@ -124,7 +128,7 @@ def view_article(request, pk):
 	is_fav =''
 	if request.user.is_authenticated:
 		is_fav = favourite.objects.filter(user = request.user, resource = pk, category= 'article').exists()
-	
+
 
 	return render(request, 'view_article.html', {'article': article, 'count':count, 'is_fav':is_fav})
 
@@ -225,14 +229,14 @@ def edit_article(request, pk):
 				# print ("Hello")
 				article = CommunityArticles.objects.get(article=pk)
 				# print ("Hello2")
-				
+
 				if article.article.state == States.objects.get(name='draft') and article.article.created_by != request.user:
 					return redirect('home')
 				if article.article.state == States.objects.get(name='publish'):
 					return redirect('article_view',pk=pk)
 				belongs_to = 'community'
 				# print ("Hello3")
-				
+
 
 				try:
 					cmember = CommunityMembership.objects.get(user =request.user.id, community = article.community.pk)
@@ -244,7 +248,7 @@ def edit_article(request, pk):
 									transition =trans
 								if trans.to_state.name=='visible':
 									reject =trans
-								 
+
 						else:
 							transition = Transitions.objects.get(from_state=article.article.state)
 							state1 = States.objects.get(name='draft')
