@@ -352,10 +352,22 @@ def update_community_info(request,pk):
 					community.tag_line = tag_line
 					try:
 						image = request.FILES['community_image']
+						x = float(request.POST['x'])
+						y = float(request.POST['y'])
+						w = float(request.POST['width'])
+						h = float(request.POST['height'])
 						community.image = image
+						community.image_thumbnail = image
+						community.save()
+
+						#for image thumbnail creation 
+						thumb = Image.open(community.image_thumbnail)
+						cropped_image = thumb.crop((x, y, w+x, h+y))
+						resized_image = cropped_image.resize((200, 200), Image.ANTIALIAS)
+						resized_image.save(community.image_thumbnail.path)
 					except:
 						errormessage = 'image not uploaded'
-					community.save()
+						community.save()
 					return redirect('community_view',pk=pk)
 				else:
 					ctypes = CommunityTypes.objects.all()
