@@ -60,7 +60,8 @@
   <hr class="blog-post-sep">
 {% endfor %}
 </div>
-{% if not favs %}
+
+{% if  favs %}
 <div class="col-md-2 col-sm-2">
                 <div class="card" style="width: 18rem;">
                   <div class="card-header alert alert-warning">
@@ -73,7 +74,9 @@
                   {%endfor%}
           </div>
     </div>
-    {%endif%}
+    
+{% endif %}
+
 </div>
 {% endautoescape%}
 
