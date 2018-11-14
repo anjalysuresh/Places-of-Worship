@@ -417,7 +417,8 @@ def create_community(request):
 				try:
 					cursor.execute(insert_stmt, data)
 					cursor.execute(''' select id from forum_forum order by id desc limit 1''')
-					forum_link = slug + '-' + str(cursor.fetchone()[0])
+					fid = str(cursor.fetchone()[0])
+					forum_link = slug + '-' + fid
 				except:
 					errormessage = 'Can not create default forum for this community'
 					ctypes = CommunityTypes.objects.all()
@@ -431,7 +432,8 @@ def create_community(request):
 					image_thumbnail = image,
 					tag_line = tag_line,
 					created_by = usr,
-					forum_link = forum_link
+					forum_link = forum_link,
+					forum = fid
 					)
 
 				#for image thumbnail creation 
