@@ -35,25 +35,42 @@
         <input type = 'hidden' name = 'gid' value = {{group.pk}}>
       {% endif %}
     <input type="hidden" name="status" value={{status}}>
-  <div class="form-group custom-file">
+  <div class="form-group">
+    <label>Type</label></br>
+    <div class="radio">
+      <label>
+        <input type="radio" name="video_type" id="video_type" value="Upload" checked="checked">Upload
+      </label>
+      <label>
+        <input type="radio" name="video_type" id="video_type" value="Link">Link
+      </label>
+    </div>
+  </div>
+
+  <div class="form-group" id="LinkOption" style="display: none">
+    <label for="link">Link</label>
+    <input type="text" class="form-control" id="medialink" name="medialink"  placeholder="Input Link here">
+  </div>
+
+  <div class="form-group custom-file" id="UploadOption">
     <label for="media">Upload {{request.POST.mediatype}}</label>
     {% if request.POST.mediatype == 'Image' %}
-      <input type="file" name ="mediafile" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]' data-show-upload="false" data-msg-placeholder="Select an image for upload..." required>
+      <input type="file" name ="mediafile" class="file" data-allowed-file-extensions='["jpeg", "jpg","png"]' data-show-upload="false" data-msg-placeholder="Select an image for upload..." >
       <input type='hidden' id="mediatype" name="mediatype" value="Image">
     {% endif %}
     {% if request.POST.mediatype == 'Audio' %}
-      <input type="file" name ="mediafile" class="file" data-allowed-file-extensions='["mp3", "wav","ogg"]' data-show-upload="false" data-msg-placeholder="Select an audio for upload..." required>
+      <input type="file" name ="mediafile" class="file" data-allowed-file-extensions='["mp3", "wav","ogg"]' data-show-upload="false" data-msg-placeholder="Select an audio for upload..." >
       <input type='hidden' id="mediatype" name="mediatype" value="Audio">
     {% endif %}
     {% if request.POST.mediatype == 'Video' %}
-      <input type="file" name ="mediafile" class="file" data-allowed-file-extensions='["vob", "webm","avi","mp4","wmv"]' data-show-upload="false" data-msg-placeholder="Select a video for upload..." required>
+      <input type="file" name ="mediafile" class="file" data-allowed-file-extensions='["vob", "webm","avi","mp4","wmv"]' data-show-upload="false" data-msg-placeholder="Select a video for upload..." >
       <input type='hidden' id="mediatype" name="mediatype" value="Video">
       {% endif %}
   </div>
   <div class="form-group">
     <label for="description">Description</label>
     <textarea class="form-control" id="description" name="description" required>
-      
+
     </textarea>
   </div>
   {% if status == 1 %}
@@ -80,4 +97,20 @@
 <script src="{% static 'js/bootstrap_fileinput/purify.min.js' %}"></script>
 <script src="{% static 'js/bootstrap_fileinput/sortable.min.js' %}"></script>
 <script src="{% static 'js/bootstrap_fileinput/fileinput.min.js' %}"></script>
+
+<script>
+$(function() {
+    $('input[name="video_type"]').on('click', function() {
+        if ($(this).val() == 'Link') {
+          $('#LinkOption').show();
+          $('#UploadOption').hide();
+        }
+        if ($(this).val() == 'Upload') {
+            $('#LinkOption').hide();
+            $('#UploadOption').show();
+        }
+    });
+});
+</script>
+
 {% endblock %}

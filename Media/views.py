@@ -13,11 +13,17 @@ def create_media(request):
 			state = States.objects.get(name='draft')
 			title = request.POST['title']
 			mediatype = request.POST['mediatype']
-			mediafile = request.FILES['mediafile']
+			try:
+				mediafile = request.FILES['mediafile']
+				medialink = ''
+			except:
+				mediafile = None
+				medialink = request.POST['medialink']			
 			media_resource = Media.objects.create(
 				title = title,
 				mediatype = mediatype,
 				mediafile = mediafile,
+				medialink = medialink,
 				created_by = request.user,
 				state = state
 				)
@@ -106,18 +112,18 @@ def get_comm_membership(pk, uid):
 	return cmembership
 
 def display_published_media(request, mediatype):
-	try: 
+	try:
 		cmedialist = CommunityMedia.objects.filter(media__state__name='publish', media__mediatype=mediatype)
 		gmedialist = GroupMedia.objects.filter(media__state__name='publish', media__mediatype=mediatype)
-		
+
 		for cmedia in cmedialist:
 			cmedia.belongsto = 'community'
 
 		for gmedia in gmedialist:
 			gmedia.belongsto = 'group'
-			
+
 		medialist = list(cmedialist) +  list(gmedialist)
-		
+
 		page = request.GET.get('page', 1)
 		paginator = Paginator(list(medialist), 5)
 		try:
