@@ -18,7 +18,7 @@ def create_media(request):
 				medialink = ''
 			except:
 				mediafile = None
-				medialink = request.POST['medialink']			
+				medialink = request.POST['medialink']
 			media_resource = Media.objects.create(
 				title = title,
 				mediatype = mediatype,
@@ -71,7 +71,8 @@ def media_edit(request,pk):
 					mediafile = request.FILES['mediafile']
 					media.mediafile = mediafile
 				except:
-					message = 'media not uploaded'
+					medialink = request.POST['medialink']
+					media.medialink = medialink
 				media.save()
 				metadata.save()
 				return redirect('media_view',pk=pk)
