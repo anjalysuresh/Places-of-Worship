@@ -67,12 +67,19 @@ def media_edit(request,pk):
 				media.title = title
 				media.state = state
 				metadata.description = description
-				try:
-					mediafile = request.FILES['mediafile']
-					media.mediafile = mediafile
-				except:
-					medialink = request.POST['medialink']
-					media.medialink = medialink
+				uploadOrLink = request.POST['uploadOrLink']
+				if uploadOrLink == 'upload':
+					try:
+						mediafile = request.FILES['mediafile']
+						media.mediafile = mediafile
+					except:
+						message = 'media not uploaded'
+				if uploadOrLink == 'link':
+					try:
+						mediafile = request.POST['medialink']
+						media.medialink = medialink
+					except:
+						message = 'no media link'
 				media.save()
 				metadata.save()
 				return redirect('media_view',pk=pk)
