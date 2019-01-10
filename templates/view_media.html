@@ -59,11 +59,15 @@
         {% endif %}
       {% endif %}
       {% if gcmedia.media.mediatype == 'Audio' %}
-        <audio controls>
-          <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="audio/mp3" />
-          <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="audio/wav" />
-          <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="audio/ogg" />
-        </audio>
+        {% if gcmedia.media.mediafile %}
+          <audio controls>
+            <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="audio/mp3" />
+            <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="audio/wav" />
+            <source src="{{ MEDIA_URL }}{{ gcmedia.media.mediafile}}" type="audio/ogg" />
+          </audio>
+        {% else %}
+          <iframe width="100%" class="embed-responsive-item" src="{{ gcmedia.media.medialink }}" allow="autoplay; encrypted-media"  style="border: 1px solid red;" allowfullscreen></iframe>
+        {% endif %}
       {% endif %}
       {% if gcmedia.media.mediatype == 'Video' %}
         {% if gcmedia.media.mediafile %}
