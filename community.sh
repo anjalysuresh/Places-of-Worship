@@ -4,7 +4,7 @@ sudo mkdir testapi
 sudo chmod 777 testapi
 sudo docker-compose up -d
 
-sudo docker exec -i pipeline_multirepo_web_1 python3 manage.py generateToken --n > out.txt
+sudo docker exec -i places_of_worship_db_1 python3 manage.py generateToken --n > out.txt
 chmod 777 out.txt
 
 
@@ -30,7 +30,7 @@ sudo sed -i 's,RecommendationPort=3445,RecommendationPort=3445,g' .env.docker
 pwd
 sleep 100s
 sleep 250s
-sudo docker cp  pipeline_multirepo_node_1:/code  testapi &
+sudo docker cp  places_of_worship_node_1:/code  testapi &
 wait
 cd testapi
 cd code
@@ -43,7 +43,7 @@ cd ..
 cd ..
 pwd
 sudo sed -i "s,APIKEY=,APIKEY=$apiid,g" .env.docker
-sudo docker exec -i pipeline_multirepo_web_1 python3 manage.py migrate     
+sudo docker exec -i places_of_worship_web_1 python3 manage.py migrate     
 
 sudo docker-compose build        
 sudo docker-compose up -d
