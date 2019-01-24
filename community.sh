@@ -4,7 +4,7 @@ sudo mkdir testapi
 sudo chmod 777 testapi
 sudo docker-compose up -d
 
-sudo docker exec -i places_of_worship_db_1 python3 manage.py generateToken --n > out.txt
+sudo docker exec -i places_of_worship_web_1 python3 manage.py generateToken --n > out.txt
 chmod 777 out.txt
 
 
